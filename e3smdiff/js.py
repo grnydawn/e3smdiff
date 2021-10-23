@@ -1,3 +1,4 @@
+resizable = """
 const Resizable = {};
 Resizable.activeContentWindows = [];
 Resizable.activeResizers = [];
@@ -597,3 +598,4 @@ Resizable.Resizer = class{
   }
 
 };
+"""

@@ -1,3 +1,4 @@
+resizable = """
 * {
   padding: 0;
   margin: 0;
@@ -23,3 +24,4 @@
 .horizontalResizer{
   cursor: ew-resize;
 }
+"""

@@ -1,3 +1,4 @@
+index = """
 <!DOCTYPE html>
 
 <html>
@@ -89,8 +90,8 @@
 			Resizable.activeContentWindows[0].childrenResize();
 		});
                 
-        const fileSelector = document.getElementById('leftInput');
-        fileSelector.addEventListener('change', (event) => {
+        const leftInput = document.getElementById('leftInput');
+        leftInput.addEventListener('change', (event) => {
             const fileList = event.target.files;
             //console.log(fileList);
             let text = "";
@@ -101,8 +102,8 @@
             alert(text);
         });
                 
-        const fileSelector = document.getElementById('rightInput');
-        fileSelector.addEventListener('change', (event) => {
+        const rightInput = document.getElementById('rightInput');
+        rightInput.addEventListener('change', (event) => {
             const fileList = event.target.files;
             //console.log(fileList);
             let text = "";
@@ -116,4 +117,4 @@
 	</script>
 
 </html>
-
+"""
