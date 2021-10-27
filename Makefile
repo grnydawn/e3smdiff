@@ -2,6 +2,8 @@
 
 NAME := e3smdiff
 PY := python3
+CASE1 := data/cases/SMS.T62_oQU120_ais20.MPAS_LISIO_TEST.spock_gnu.20211021_182634_4foh9f
+CASE2 := data/cases/SMS_R_Ld5.ne4_ne4.FSCM5A97.spock_gnu.eam-scm.20211021_182634_4foh9f
 
 .PHONY: clean clean-test clean-pyc clean-build doc help
 .DEFAULT_GOAL := help
@@ -61,7 +63,7 @@ lint: ## check style with flake8
 	flake8 ${NAME} tests
 
 test: ## run tests quickly with the default Python
-	e3smdiff
+	e3smdiff ${CASE1} ${CASE2}
 	#pytest ./tests -s -vv --pyargs ${NAME}
 
 test-all: ## run tests on every Python version with tox
