@@ -144,15 +144,10 @@ index = """
                 for (ridx in ritems) {
                     var ritem = ritems[ridx];
                     if (ritem.getUserObject() == lname) {
-                        //console.log(litem);
-                        //console.log(ritem);
-                        //alert(lname);
                         pairing(litem, ritem);
                         break;
                     }
                 }
-                //alert(lname);
-                //console.log(litem);
             }
 
 /*
@@ -182,7 +177,7 @@ index = """
         function traverse(obj, depth) {
             var node = new TreeNode(obj["name"]);
             node.on("click", (e, n) => {
-                // console.log(e,n);
+
                 if (!n.isLeaf()) {
                     isExpanded = n.isExpanded();
                 }
@@ -201,6 +196,18 @@ index = """
                     for ( pidx in pairsel) {
                         pairsel[pidx].setSelected(false);
                     }
+                } else {
+                    var myview = n.getRoot().getOptions()["myview"];
+                    if (myview == leftTree) {
+                        var pairview = rightTree;
+                    } else {
+                        var pairview = leftTree;
+                    }
+                    var pairsel = pairview.getSelectedNodes();
+                    for ( pidx in pairsel) {
+                        pairsel[pidx].setSelected(false);
+                    }
+                    pairview.reload();
                 }
             });
 
@@ -229,7 +236,7 @@ index = """
             tree.setRoot(root)
             root.changeOption("myview", tree);
 
-            // TODO: pairing for all nodes
+            // TODO: coloring non-diffed(black), different(red), same(blue)
 
             if (tree == leftTree) {
                 root.changeOption("pairview", rightTree);
