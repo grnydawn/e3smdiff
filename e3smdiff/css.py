@@ -92,3 +92,39 @@ tree = """
 	background-color: #606060;
 }
 """
+
+diff_table = """
+table.diff {font-family:Courier; border:medium;}
+
+.diff_header {background-color:#e0e0e0}
+
+td.diff_header {text-align:right}
+
+.diff_next {background-color:#c0c0c0}
+
+.diff_add {background-color:#aaffaa}
+
+.diff_chg {background-color:#ffff77}
+
+.diff_sub {background-color:#ffaaaa}
+
+/*
+.table th {
+    position: relative;
+}
+.resizer {
+    // Displayed at the right side of column
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 5px;
+    cursor: col-resize;
+    user-select: none;
+}
+
+.resizer:hover,
+.resizing {
+    border-right: 2px solid blue;
+}
+*/
+"""

@@ -3,8 +3,9 @@
 NAME := e3smdiff
 PY := python3
 CASE1 := data/cases/SMS.T62_oQU120_ais20.MPAS_LISIO_TEST.spock_gnu.20211021_182634_4foh9f
-CASE2 := data/cases/SMS_R_Ld5.ne4_ne4.FSCM5A97.spock_gnu.eam-scm.20211021_182634_4foh9f
-
+#CASE2 := data/cases/SMS_R_Ld5.ne4_ne4.FSCM5A97.spock_gnu.eam-scm.20211021_182634_4foh9f
+CASE2 := /Users/8yk/repos/github/e3smdiff/data/cases/SMS_R_Ld5.ne4_ne4.FSCM5A97.spock_gnu.eam-scm.20211021_182634_4foh9f
+ 
 .PHONY: clean clean-test clean-pyc clean-build doc help
 .DEFAULT_GOAL := help
 

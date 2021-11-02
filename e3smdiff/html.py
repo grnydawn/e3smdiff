@@ -7,10 +7,12 @@ index = """
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<link rel="stylesheet" type="text/css" href="resizable-style.css">
 		<link rel="stylesheet" type="text/css" href="tree.css">
+		<link rel="stylesheet" type="text/css" href="difftable.css">
 		<title>E3SM DIFF</title>
 
 		<script src="resizable.js"></script>
 		<script src="tree.js"></script>
+		<script src="difftable.js"></script>
 
 		<style>
 
@@ -37,9 +39,7 @@ index = """
 			<div class="resizable-top" id="win1">
                 <center><h1>E3SM DIFF</h1></center>
 <!--
-                <input id="leftInput" type="file" multiple style="display: none;" >
                 <input id="rightInput" type="file" multiple style="display: none;" >
-                <button style="float: left;" onclick="document.getElementById('leftInput').click();">Open</button>
                 <button style="float: right;" onclick="document.getElementById('rightInput').click();">Open</button>
 -->
 			</div>
@@ -49,13 +49,9 @@ index = """
 			        </div>
 				    <div class="resizable-right" id="win5">
 				        <div class="resizable-top" id="win6">
-				            <div class="resizable-top" id="win7">
+				            <div class="resizable-top" id="infowin">
 			                </div>
-				            <div class="resizable-bottom" id="win8">
-				                <div class="resizable-left" id="win9">
-			                    </div>
-				                <div class="resizable-right" id="win10">
-			                    </div>
+				            <div class="resizable-bottom" id="diffwin">
 			                </div>
 			            </div>
 				        <div class="resizable-bottom" id="win11">
@@ -174,40 +170,65 @@ index = """
 
         }
 
+        function load_diff () {
+            const res = JSON.parse(this.responseText);
+
+            //document.getElementById("diffwin").innerHTML = this.responseText;
+            document.getElementById("diffwin").innerHTML = res["diffmain"];
+            document.getElementById("infowin").innerHTML = res["difflegend"];
+        }
+
         function traverse(obj, depth) {
             var node = new TreeNode(obj["name"]);
             node.on("click", (e, n) => {
+                
+                var myroot = n.getRoot();
+                var myview = myroot.getOptions()["myview"];
+                var req_msg = "/diff?";
 
-                if (!n.isLeaf()) {
+                if (myview == leftTree) {
+                    var pairview = rightTree;
+                    var myside = "LEFT";
+                    var pairside = "RIGHT";
+                } else {
+                    var pairview = leftTree;
+                    var myside = "RIGHT";
+                    var pairside = "LEFT";
+                }
+
+                if (n.isLeaf()) {
+                    let path = new TreePath(myroot, n);
+                    req_msg += myside + "=" + path.toString();
+                } else {
                     isExpanded = n.isExpanded();
                 }
 
                 pair = n.getOptions()["pair"];
                 if (typeof(pair) != "undefined") {
-
-                    if (!pair.isLeaf()) {
+                    var pairroot = pair.getRoot()
+                    if (pair.isLeaf()) {
+                        let path2 = new TreePath(pairroot, pair);
+                        req_msg += ";" + pairside + "=" + path2.toString();
+                    } else {
                         pair.setExpanded(isExpanded);
                     }
                     pair.setSelected(true);
 
-                    pairview = pair.getRoot().getOptions()["myview"];
                     pairview.reload();
                     pairsel = pairview.getSelectedNodes();
                     for ( pidx in pairsel) {
                         pairsel[pidx].setSelected(false);
                     }
                 } else {
-                    var myview = n.getRoot().getOptions()["myview"];
-                    if (myview == leftTree) {
-                        var pairview = rightTree;
-                    } else {
-                        var pairview = leftTree;
-                    }
                     var pairsel = pairview.getSelectedNodes();
                     for ( pidx in pairsel) {
                         pairsel[pidx].setSelected(false);
                     }
                     pairview.reload();
+                }
+
+                if (req_msg != "/diff?") {
+                    send_request(req_msg, "text", load_diff);
                 }
             });
 
@@ -256,6 +277,33 @@ index = """
             tree.reload();
         }
 
+        function load_lefttree () {
+              var status = this.status;
+              if (status === 200) {
+                load_case(leftTree, this.responseText);
+              } else {
+                alert("load case1 failure");
+              }
+        }
+
+        function load_righttree () {
+              var status = this.status;
+              if (status === 200) {
+                load_case(rightTree, this.responseText);
+              } else {
+                alert("load case2 failure");
+              }
+        }
+
+        function send_request(path, restype, load_tree) {
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', path, true);
+            xhr.responseType = restype;
+            xhr.onload = load_tree;
+            xhr.send();
+        }
+
         // listeners
 
 		document.addEventListener("DOMContentLoaded", () => {
@@ -268,7 +316,7 @@ index = """
 				"win3" : 0.83,
 				"win4" : 0.2,
 				"win6" : 0.8,
-				"win7" : 0.1,
+				"infowin" : 0.1,
 			};
 
 			let resizerThickness = 4;
@@ -276,31 +324,8 @@ index = """
 			//Resizable.initialise("main", {});
 
             // read case1 and case2
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', "/case1", true);
-            xhr.responseType = 'text';
-            xhr.onload = function() {
-              var status = xhr.status;
-              if (status === 200) {
-                load_case(leftTree, xhr.responseText);
-              } else {
-                alert("load case1 failure");
-              }
-            };
-            xhr.send();
-
-            var xhr2 = new XMLHttpRequest();
-            xhr2.open('GET', "/case2", true);
-            xhr2.responseType = 'text';
-            xhr2.onload = function() {
-              var status = xhr2.status;
-              if (status === 200) {
-                load_case(rightTree, xhr2.responseText);
-              } else {
-                alert("load case2 failure");
-              }
-            };
-            xhr2.send();
+            send_request("/case1", "text", load_lefttree);
+            send_request("/case2", "text", load_righttree);
 		});
 
 		window.addEventListener("resize", () => {
