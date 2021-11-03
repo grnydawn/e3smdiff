@@ -104,3 +104,5 @@ dev-install: clean ## install the package locally
 	#${PY} setup.py develop
 	#${PY} setup.py develop --user
 
+sshspock:
+	ssh -L localhost:8000:localhost:8000 grnydawn@spock.olcf.ornl.gov
