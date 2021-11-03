@@ -17,6 +17,19 @@ _legend = """
                   </table></td> </tr>
     </table>"""
 
+_difftype = """
+  <div>
+    Select DIFF type: <input type="radio" id="difftype1"
+     name="difftype" value="context" checked onclick="context_diff();">
+    <label for="difftype1">Context</label>
+
+    <input type="radio" id="difftype2"
+     name="difftype" value="all" onclick="nocontext_diff();">
+    <label for="difftype2">All</label>
+  </div>
+"""
+
+
 class E3SMHtmlDiff(difflib.HtmlDiff):
     pass
 
@@ -43,10 +56,12 @@ class Vimdiff():
             rlines = rfile.readlines()
             rfile.close()
 
-            data["diffmain"] = difflib.HtmlDiff(wrapcolumn=50).make_table(llines, rlines, "<<<", ">>>")
+            contextmain = difflib.HtmlDiff().make_table(llines, rlines, fromdesc="<<<", todesc=">>>", context=True)
+            nocontextmain = difflib.HtmlDiff().make_table(llines, rlines, fromdesc="<<<", todesc=">>>", context=False)
+            data["diffmain"] = {"contextmain":contextmain, "nocontextmain":nocontextmain}
             #data = difflib.E3SMHtmlDiff(wrapcolumn=50).make_file(llines, rlines, "<<<", ">>>")
             #data = difflib.E3SMHtmlDiff(wrapcolumn=50).make_difftable(llines, rlines, "<<<", ">>>")
-            data["difflegend"] = _legend
+            data["difflegend"] = _legend + _difftype
 
         except FileNotFoundError as err:
 
