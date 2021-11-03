@@ -19,10 +19,10 @@ index = """
 			#win5, #win14{
 				background-color: #81A19F;
 			}
-			#win9, #win4{
+			#win9, #leftwin{
 				background-color: #BEEDEB;
 			}
-			#win12, #win6{
+			#rightwin, #win6{
 				background-color: #B4E0DE;
 			}
 			#win13, #win8{
@@ -36,7 +36,7 @@ index = """
 	<body>
 
 		<div id="main">
-			<div class="resizable-top" id="win1">
+			<div class="resizable-top" id="topwin">
                 <center><h1>E3SM DIFF</h1></center>
 <!--
                 <input id="rightInput" type="file" multiple style="display: none;" >
@@ -45,7 +45,7 @@ index = """
 			</div>
 			<div class="resizable-bottom" id="win2">
 				<div class="resizable-left" id="win3">
-				    <div class="resizable-left" id="win4">
+				    <div class="resizable-left" id="leftwin">
 			        </div>
 				    <div class="resizable-right" id="win5">
 				        <div class="resizable-top" id="win6">
@@ -58,7 +58,7 @@ index = """
 			            </div>
 			        </div>
 			    </div>
-				<div class="resizable-right" id="win12" style="overflow-x: scroll;">
+				<div class="resizable-right" id="rightwin" style="overflow-x: scroll;">
 			    </div>
 			</div>
 		</div>
@@ -69,14 +69,25 @@ index = """
         // global variables
 
 		var dummynode = new TreeNode("dummy");
-		var leftTree = new TreeView(dummynode, "#win4");
-		var rightTree = new TreeView(dummynode, "#win12");
+		var leftTree = new TreeView(dummynode, "#leftwin");
+		var rightTree = new TreeView(dummynode, "#rightwin");
 
         const leftInput = document.getElementById('leftInput');
         const rightInput = document.getElementById('rightInput');
 
+		var curContextDiff;
+		var curNoContextDiff;
 
         // functions
+
+        function context_diff() {
+            document.getElementById("diffwin").innerHTML = curContextDiff;
+        }
+
+        function nocontext_diff() {
+            document.getElementById("diffwin").innerHTML = curNoContextDiff;
+        }
+
         function editDistance(s1, s2) {
           s1 = s1.toLowerCase();
           s2 = s2.toLowerCase();
@@ -174,8 +185,22 @@ index = """
             const res = JSON.parse(this.responseText);
 
             //document.getElementById("diffwin").innerHTML = this.responseText;
-            document.getElementById("diffwin").innerHTML = res["diffmain"];
+
             document.getElementById("infowin").innerHTML = res["difflegend"];
+
+            const context = document.getElementById("difftype1").checked;
+            const nocontext = document.getElementById("difftype2").checked;
+
+		    curContextDiff = res["diffmain"]["contextmain"];
+		    curNoContextDiff = res["diffmain"]["nocontextmain"];
+
+            if (context == true) {
+                document.getElementById("diffwin").innerHTML = curContextDiff;
+            } else if (context == false){
+                document.getElementById("diffwin").innerHTML = curNoContextDiff;
+            } else {
+                document.getElementById("diffwin").innerHTML = curContextDiff;
+            }
         }
 
         function traverse(obj, depth) {
@@ -312,11 +337,11 @@ index = """
 			document.getElementById("main").style.height = window.innerHeight + "px";
 
 			var sizes = {
-				"win1" : 0.1,
+				"topwin" : 0.1,
 				"win3" : 0.83,
-				"win4" : 0.2,
+				"leftwin" : 0.2,
 				"win6" : 0.8,
-				"infowin" : 0.1,
+				"infowin" : 0.2,
 			};
 
 			let resizerThickness = 4;

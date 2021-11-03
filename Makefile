@@ -5,6 +5,8 @@ PY := python3
 CASE1 := data/cases/SMS.T62_oQU120_ais20.MPAS_LISIO_TEST.spock_gnu.20211021_182634_4foh9f
 #CASE2 := data/cases/SMS_R_Ld5.ne4_ne4.FSCM5A97.spock_gnu.eam-scm.20211021_182634_4foh9f
 CASE2 := /Users/8yk/repos/github/e3smdiff/data/cases/SMS_R_Ld5.ne4_ne4.FSCM5A97.spock_gnu.eam-scm.20211021_182634_4foh9f
+CASES1 := /ccs/home/grnydawn/prjcli133/e3sm_scratch/spock_cray/SMS.T62_oQU120_ais20.MPAS_LISIO_TEST.spock_cray.20211026_082541_5xjzcm
+CASES2 := /ccs/home/grnydawn/prjcli133/e3sm_scratch/spock_cray/SMS_P12x2.ne4_oQU240.WCYCL1850NS.spock_cray.allactive-mach_mods.20211026_082541_5xjzcm
  
 .PHONY: clean clean-test clean-pyc clean-build doc help
 .DEFAULT_GOAL := help
@@ -65,6 +67,10 @@ lint: ## check style with flake8
 
 test: ## run tests quickly with the default Python
 	e3smdiff ${CASE1} ${CASE2}
+	#pytest ./tests -s -vv --pyargs ${NAME}
+
+stest: ## run tests quickly with the default Python
+	e3smdiff ${CASES1} ${CASES2}
 	#pytest ./tests -s -vv --pyargs ${NAME}
 
 test-all: ## run tests on every Python version with tox

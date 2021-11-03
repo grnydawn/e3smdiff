@@ -1277,7 +1277,7 @@ var TreeConfig = {
 """
 
 diff_table = """
-
+/*
 // Query the table
 const table = document.getElementById('resizeMe');
 
@@ -1336,12 +1336,11 @@ const createResizableColumn = function (col, resizer) {
 };
 
 const mouseDownHandler = function(e) {
-    ...
     resizer.classList.add('resizing');
 };
 
 const mouseUpHandler = function() {
-    ...
     resizer.classList.remove('resizing');
 };
+*/
 """
